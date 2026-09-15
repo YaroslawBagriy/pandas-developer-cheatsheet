@@ -64,6 +64,7 @@ This cheat sheet is designed to work both as a quick lookup and as lightweight d
 - [Debugging and Validation](#debugging-and-validation)
 - [Common Gotchas](#common-gotchas)
 - [Quick Reference](#quick-reference)
+- [Pandas Function and Method Reference](#pandas-function-and-method-reference)
 - [Official Documentation](#official-documentation)
 
 ---
@@ -6603,6 +6604,2610 @@ pd.testing.assert_series_equal(
     expected
 )
 ```
+
+---
+
+# Pandas Function and Method Reference
+
+This reference documents every Pandas function/method used in this cheat sheet. Each entry includes its purpose, a representative example from the guide, important usage notes where they add value, and a direct link to the official Pandas API reference.
+
+## Constructors and Top-Level Functions
+
+### `pd.DataFrame()`
+
+**What it does:** Create a two-dimensional labeled table.
+
+**Example:**
+
+```python
+df = pd.DataFrame({
+    "name": ["Alice", "Bob", "Charlie"],
+    "age": [25, 30, 35],
+    "city": ["Minneapolis", "Chicago", "New York"]
+})
+```
+
+**Official documentation:** https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.html
+
+---
+
+### `pd.Series()`
+
+**What it does:** Create a one-dimensional labeled array.
+
+**Example:**
+
+```python
+s = pd.Series([10, 20, 30])
+
+print(s)
+```
+
+**Official documentation:** https://pandas.pydata.org/docs/reference/api/pandas.Series.html
+
+---
+
+### `pd.Timestamp()`
+
+**What it does:** Represent a single datetime-like instant.
+
+**Example:**
+
+```python
+ts = pd.Timestamp(
+    "2026-09-15 14:30:00"
+)
+```
+
+**Official documentation:** https://pandas.pydata.org/docs/reference/api/pandas.Timestamp.html
+
+---
+
+### `pd.Timedelta()`
+
+**What it does:** Represent an elapsed duration.
+
+**Example:**
+
+```python
+delta = pd.Timedelta(
+    "2 days 3 hours"
+)
+```
+
+**Official documentation:** https://pandas.pydata.org/docs/reference/api/pandas.Timedelta.html
+
+---
+
+### `pd.Period()`
+
+**What it does:** Represent a calendar span such as a month, quarter, or year.
+
+**Example:**
+
+```python
+p = pd.Period(
+    "2026-09",
+    freq="M"
+)
+```
+
+**Official documentation:** https://pandas.pydata.org/docs/reference/api/pandas.Period.html
+
+---
+
+### `pd.DatetimeIndex()`
+
+**What it does:** Create an index optimized for datetime values.
+
+**Example:**
+
+```python
+idx = pd.DatetimeIndex([
+    "2026-09-15",
+    "2026-09-16"
+])
+```
+
+**Official documentation:** https://pandas.pydata.org/docs/reference/api/pandas.DatetimeIndex.html
+
+---
+
+### `pd.CategoricalDtype()`
+
+**What it does:** Define categorical labels and optional ordering.
+
+**Example:**
+
+```python
+priority_type = pd.CategoricalDtype(
+    categories=[
+        "low",
+        "medium",
+        "high"
+    ],
+    ordered=True
+)
+
+df["priority"] = (
+    df["priority"]
+    .astype(priority_type)
+)
+```
+
+**Official documentation:** https://pandas.pydata.org/docs/reference/api/pandas.CategoricalDtype.html
+
+---
+
+### `pd.DateOffset()`
+
+**What it does:** Represent calendar-aware date arithmetic.
+
+**Example:**
+
+```python
+ts + pd.DateOffset(
+    days=1
+)
+```
+
+**Official documentation:** https://pandas.pydata.org/docs/reference/api/pandas.DateOffset.html
+
+---
+
+### `pd.Grouper()`
+
+**What it does:** Define grouping behavior, especially frequency-based datetime grouping.
+
+**Example:**
+
+```python
+monthly = (
+    df
+    .groupby(
+        pd.Grouper(
+            key="timestamp",
+            freq="ME"
+        )
+    )
+    ["sales"]
+    .sum()
+)
+```
+
+**Official documentation:** https://pandas.pydata.org/docs/reference/api/pandas.Grouper.html
+
+---
+
+### `pd.read_csv()`
+
+**What it does:** Read CSV or other delimited text into a DataFrame.
+
+**Important notes:** Useful options include `usecols=`, `dtype=`, `parse_dates=`, `na_values=`, `chunksize=`, and `encoding=`.
+
+**Example:**
+
+```python
+df = pd.read_csv("data.csv")
+```
+
+**Official documentation:** https://pandas.pydata.org/docs/reference/api/pandas.read_csv.html
+
+---
+
+### `pd.read_excel()`
+
+**What it does:** Read Excel worksheets into DataFrames.
+
+**Example:**
+
+```python
+df = pd.read_excel("data.xlsx")
+```
+
+**Official documentation:** https://pandas.pydata.org/docs/reference/api/pandas.read_excel.html
+
+---
+
+### `pd.read_json()`
+
+**What it does:** Read JSON data into Pandas objects.
+
+**Example:**
+
+```python
+df = pd.read_json("data.json")
+```
+
+**Official documentation:** https://pandas.pydata.org/docs/reference/api/pandas.read_json.html
+
+---
+
+### `pd.read_parquet()`
+
+**What it does:** Read typed Parquet data into a DataFrame.
+
+**Example:**
+
+```python
+df = pd.read_parquet("data.parquet")
+```
+
+**Official documentation:** https://pandas.pydata.org/docs/reference/api/pandas.read_parquet.html
+
+---
+
+### `pd.read_sql_query()`
+
+**What it does:** Execute a SQL query and return the result as a DataFrame.
+
+**Example:**
+
+```python
+query = """
+SELECT
+    user_id,
+    created_at,
+    amount
+FROM transactions
+"""
+
+df = pd.read_sql_query(
+    query,
+    connection
+)
+```
+
+**Official documentation:** https://pandas.pydata.org/docs/reference/api/pandas.read_sql_query.html
+
+---
+
+### `pd.read_html()`
+
+**What it does:** Extract HTML tables into DataFrames.
+
+**Example:**
+
+```python
+tables = pd.read_html(
+    "https://example.com/page"
+)
+```
+
+**Official documentation:** https://pandas.pydata.org/docs/reference/api/pandas.read_html.html
+
+---
+
+### `pd.read_clipboard()`
+
+**What it does:** Read tabular clipboard content into a DataFrame.
+
+**Example:**
+
+```python
+df = pd.read_clipboard()
+```
+
+**Official documentation:** https://pandas.pydata.org/docs/reference/api/pandas.read_clipboard.html
+
+---
+
+### `pd.to_datetime()`
+
+**What it does:** Convert strings, numbers, arrays, or columns into datetime values.
+
+**Important notes:** Key options: `errors='coerce'`, `format=`, `utc=True`, `unit=`, `dayfirst=`, and `yearfirst=`. For production pipelines, make the source format and timezone assumptions explicit.
+
+**Example:**
+
+```python
+df["created_at"] = pd.to_datetime(
+    df["created_at"],
+    errors="coerce"
+)
+```
+
+**Official documentation:** https://pandas.pydata.org/docs/reference/api/pandas.to_datetime.html
+
+---
+
+### `pd.to_timedelta()`
+
+**What it does:** Convert values into elapsed Timedelta values.
+
+**Example:**
+
+```python
+df["duration"] = pd.to_timedelta(
+    df["duration"],
+    errors="coerce"
+)
+```
+
+**Official documentation:** https://pandas.pydata.org/docs/reference/api/pandas.to_timedelta.html
+
+---
+
+### `pd.to_numeric()`
+
+**What it does:** Convert values to numeric dtype with configurable error handling.
+
+**Example:**
+
+```python
+df["amount"] = pd.to_numeric(
+    df["amount"],
+    errors="coerce"
+)
+```
+
+**Official documentation:** https://pandas.pydata.org/docs/reference/api/pandas.to_numeric.html
+
+---
+
+### `pd.date_range()`
+
+**What it does:** Generate a fixed-frequency DatetimeIndex.
+
+**Example:**
+
+```python
+dates = pd.date_range(
+    start="2026-01-01",
+    end="2026-01-07",
+    freq="D"
+)
+```
+
+**Official documentation:** https://pandas.pydata.org/docs/reference/api/pandas.date_range.html
+
+---
+
+### `pd.bdate_range()`
+
+**What it does:** Generate a business-day DatetimeIndex.
+
+**Example:**
+
+```python
+dates = pd.bdate_range(
+    start="2026-01-01",
+    periods=10
+)
+```
+
+**Official documentation:** https://pandas.pydata.org/docs/reference/api/pandas.bdate_range.html
+
+---
+
+### `pd.timedelta_range()`
+
+**What it does:** Generate a fixed-frequency TimedeltaIndex.
+
+**Example:**
+
+```python
+pd.timedelta_range(
+    start="0 days",
+    periods=5,
+    freq="2h"
+)
+```
+
+**Official documentation:** https://pandas.pydata.org/docs/reference/api/pandas.timedelta_range.html
+
+---
+
+### `pd.period_range()`
+
+**What it does:** Generate a PeriodIndex over calendar periods.
+
+**Example:**
+
+```python
+periods = pd.period_range(
+    start="2026-01",
+    periods=12,
+    freq="M"
+)
+```
+
+**Official documentation:** https://pandas.pydata.org/docs/reference/api/pandas.period_range.html
+
+---
+
+### `pd.merge()`
+
+**What it does:** Perform database-style joins between DataFrames.
+
+**Important notes:** Use `validate=` to enforce expected cardinality and catch accidental many-to-many row multiplication. `indicator=True` is useful for reconciliation.
+
+**Example:**
+
+```python
+merged = pd.merge(
+    df1,
+    df2,
+    on="id",
+    how="inner"
+)
+```
+
+**Official documentation:** https://pandas.pydata.org/docs/reference/api/pandas.merge.html
+
+---
+
+### `pd.merge_asof()`
+
+**What it does:** Join sorted data using nearest or prior/next keys, commonly timestamps.
+
+**Important notes:** Inputs must normally be sorted by the merge key. Use `direction=` and `tolerance=` to constrain matching.
+
+**Example:**
+
+```python
+left = left.sort_values(
+    "timestamp"
+)
+
+right = right.sort_values(
+    "timestamp"
+)
+
+merged = pd.merge_asof(
+    left,
+    right,
+    on="timestamp",
+    direction="backward"
+)
+```
+
+**Official documentation:** https://pandas.pydata.org/docs/reference/api/pandas.merge_asof.html
+
+---
+
+### `pd.concat()`
+
+**What it does:** Combine Pandas objects along rows or columns.
+
+**Important notes:** `axis=0` stacks rows; `axis=1` combines columns by aligned index. `ignore_index=True` creates a new sequential row index.
+
+**Example:**
+
+```python
+combined = pd.concat(
+    [df1, df2],
+    axis=0
+)
+```
+
+**Official documentation:** https://pandas.pydata.org/docs/reference/api/pandas.concat.html
+
+---
+
+### `pd.pivot_table()`
+
+**What it does:** Create an aggregated spreadsheet-style pivot table.
+
+**Important notes:** Core controls are `index=`, `columns=`, `values=`, `aggfunc=`, `fill_value=`, and `margins=`.
+
+**Example:**
+
+```python
+wide = pd.pivot_table(
+    df,
+    index="id",
+    columns="month",
+    values="sales",
+    aggfunc="sum"
+)
+```
+
+**Official documentation:** https://pandas.pydata.org/docs/reference/api/pandas.pivot_table.html
+
+---
+
+### `pd.crosstab()`
+
+**What it does:** Create a frequency table across categorical variables.
+
+**Example:**
+
+```python
+table = pd.crosstab(
+    df["region"],
+    df["status"]
+)
+```
+
+**Official documentation:** https://pandas.pydata.org/docs/reference/api/pandas.crosstab.html
+
+---
+
+### `assert_frame_equal()`
+
+**What it does:** Assert DataFrame equality in tests.
+
+**Example:**
+
+```python
+pd.testing.assert_frame_equal(
+    actual,
+    expected
+)
+```
+
+**Official documentation:** https://pandas.pydata.org/docs/reference/api/pandas.testing.assert_frame_equal.html
+
+---
+
+### `assert_series_equal()`
+
+**What it does:** Assert Series equality in tests.
+
+**Example:**
+
+```python
+pd.testing.assert_series_equal(
+    actual,
+    expected
+)
+```
+
+**Official documentation:** https://pandas.pydata.org/docs/reference/api/pandas.testing.assert_series_equal.html
+
+---
+
+## Inspection, Selection, Indexing, and Structure
+
+### `head()`
+
+**What it does:** Return the first N rows.
+
+**Example:**
+
+```python
+df.head()
+```
+
+**Official documentation:** https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.head.html
+
+---
+
+### `tail()`
+
+**What it does:** Return the last N rows.
+
+**Example:**
+
+```python
+df.tail()
+```
+
+**Official documentation:** https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.tail.html
+
+---
+
+### `sample()`
+
+**What it does:** Return a random sample of rows or columns.
+
+**Important notes:** Set `random_state=` when reproducibility matters.
+
+**Example:**
+
+```python
+df.sample(5)
+```
+
+**Official documentation:** https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.sample.html
+
+---
+
+### `info()`
+
+**What it does:** Print structural information, dtypes, null counts, and memory usage.
+
+**Example:**
+
+```python
+df.info()
+```
+
+**Official documentation:** https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.info.html
+
+---
+
+### `memory_usage()`
+
+**What it does:** Measure memory consumed by columns and/or index.
+
+**Example:**
+
+```python
+df.memory_usage()
+```
+
+**Official documentation:** https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.memory_usage.html
+
+---
+
+### `describe()`
+
+**What it does:** Compute descriptive summary statistics.
+
+**Example:**
+
+```python
+df.describe()
+```
+
+**Official documentation:** https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.describe.html
+
+---
+
+### `value_counts()`
+
+**What it does:** Count occurrences of each unique value.
+
+**Example:**
+
+```python
+df["city"].value_counts()
+```
+
+**Official documentation:** https://pandas.pydata.org/docs/reference/api/pandas.Series.value_counts.html
+
+---
+
+### `nunique()`
+
+**What it does:** Count distinct values.
+
+**Example:**
+
+```python
+df["city"].nunique()
+```
+
+**Official documentation:** https://pandas.pydata.org/docs/reference/api/pandas.Series.nunique.html
+
+---
+
+### `unique()`
+
+**What it does:** Return unique Series values.
+
+**Example:**
+
+```python
+df["city"].unique()
+```
+
+**Official documentation:** https://pandas.pydata.org/docs/reference/api/pandas.Series.unique.html
+
+---
+
+### `corr()`
+
+**What it does:** Compute pairwise correlations.
+
+**Example:**
+
+```python
+df.corr(
+    numeric_only=True
+)
+```
+
+**Official documentation:** https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.corr.html
+
+---
+
+### `select_dtypes()`
+
+**What it does:** Select DataFrame columns by dtype.
+
+**Example:**
+
+```python
+df.select_dtypes(
+    include="number"
+)
+```
+
+**Official documentation:** https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.select_dtypes.html
+
+---
+
+### `convert_dtypes()`
+
+**What it does:** Convert columns to suitable Pandas extension dtypes.
+
+**Example:**
+
+```python
+df = df.convert_dtypes()
+```
+
+**Official documentation:** https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.convert_dtypes.html
+
+---
+
+### `astype()`
+
+**What it does:** Cast Series/DataFrame values to specified dtypes.
+
+**Important notes:** Use nullable Pandas dtypes such as `Int64`, `Float64`, `boolean`, and `string` when missing values must be preserved.
+
+**Example:**
+
+```python
+df["age"] = df["age"].astype("int64")
+```
+
+**Official documentation:** https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.astype.html
+
+---
+
+### `set_index()`
+
+**What it does:** Move one or more columns into the index.
+
+**Example:**
+
+```python
+df = df.set_index(
+    "user_id"
+)
+```
+
+**Official documentation:** https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.set_index.html
+
+---
+
+### `reset_index()`
+
+**What it does:** Move index levels back into columns and restore a default index.
+
+**Example:**
+
+```python
+df = df.reset_index()
+```
+
+**Official documentation:** https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.reset_index.html
+
+---
+
+### `reindex()`
+
+**What it does:** Conform data to a new set of labels.
+
+**Example:**
+
+```python
+df = df.reindex(
+    [100, 200, 300]
+)
+```
+
+**Official documentation:** https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.reindex.html
+
+---
+
+### `sort_index()`
+
+**What it does:** Sort by index labels.
+
+**Example:**
+
+```python
+df = df.sort_index()
+```
+
+**Official documentation:** https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.sort_index.html
+
+---
+
+### `xs()`
+
+**What it does:** Select a cross-section from a MultiIndex.
+
+**Example:**
+
+```python
+df.xs(
+    "Store_A",
+    level="store"
+)
+```
+
+**Official documentation:** https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.xs.html
+
+---
+
+### `from_product()`
+
+**What it does:** Construct a MultiIndex from the Cartesian product of iterables.
+
+**Example:**
+
+```python
+index = pd.MultiIndex.from_product(
+    [
+        ["A", "B"],
+        [1, 2]
+    ],
+    names=["group", "id"]
+)
+```
+
+**Official documentation:** https://pandas.pydata.org/docs/reference/api/pandas.MultiIndex.from_product.html
+
+---
+
+### `filter()`
+
+**What it does:** Select labels by item list, substring, or regex.
+
+**Example:**
+
+```python
+df.filter(
+    like="sales"
+)
+```
+
+**Official documentation:** https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.filter.html
+
+---
+
+### `drop()`
+
+**What it does:** Remove rows or columns by label.
+
+**Example:**
+
+```python
+df = df.drop(
+    columns=["temporary_column"]
+)
+```
+
+**Official documentation:** https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.drop.html
+
+---
+
+### `pop()`
+
+**What it does:** Remove and return a DataFrame column.
+
+**Example:**
+
+```python
+column = df.pop(
+    "temporary"
+)
+```
+
+**Official documentation:** https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.pop.html
+
+---
+
+### `insert()`
+
+**What it does:** Insert a column at a specific position.
+
+**Example:**
+
+```python
+df.insert(
+    0,
+    "id",
+    range(len(df))
+)
+```
+
+**Official documentation:** https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.insert.html
+
+---
+
+### `rename()`
+
+**What it does:** Rename columns or index labels.
+
+**Example:**
+
+```python
+df = df.rename(
+    columns={
+        "old_name": "new_name"
+    }
+)
+```
+
+**Official documentation:** https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.rename.html
+
+---
+
+### `assign()`
+
+**What it does:** Return a DataFrame with added/replaced columns.
+
+**Example:**
+
+```python
+df = df.assign(
+    age_plus_10=df["age"] + 10,
+    is_adult=df["age"] >= 18
+)
+```
+
+**Official documentation:** https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.assign.html
+
+---
+
+### `query()`
+
+**What it does:** Filter rows using a readable expression string.
+
+**Important notes:** Use `@name` to reference Python variables inside the query expression.
+
+**Example:**
+
+```python
+df.query(
+    "age > 30"
+)
+```
+
+**Official documentation:** https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.query.html
+
+---
+
+### `between()`
+
+**What it does:** Test whether each value falls inside a range.
+
+**Example:**
+
+```python
+df[
+    df["age"].between(
+        25,
+        40,
+        inclusive="both"
+    )
+]
+```
+
+**Official documentation:** https://pandas.pydata.org/docs/reference/api/pandas.Series.between.html
+
+---
+
+### `isin()`
+
+**What it does:** Test membership in a collection.
+
+**Example:**
+
+```python
+df[
+    df["city"].isin(
+        ["Chicago", "Minneapolis"]
+    )
+]
+```
+
+**Official documentation:** https://pandas.pydata.org/docs/reference/api/pandas.Series.isin.html
+
+---
+
+### `sort_values()`
+
+**What it does:** Perform the `sort_values` operation on the relevant Pandas object.
+
+**Example:**
+
+```python
+df = df.sort_values(
+    "age"
+)
+```
+
+**Official documentation:** https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.sort_values.html
+
+---
+
+### `nlargest()`
+
+**What it does:** Return the largest N values/rows.
+
+**Example:**
+
+```python
+df.nlargest(
+    10,
+    "sales"
+)
+```
+
+**Official documentation:** https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.nlargest.html
+
+---
+
+### `nsmallest()`
+
+**What it does:** Return the smallest N values/rows.
+
+**Example:**
+
+```python
+df.nsmallest(
+    10,
+    "sales"
+)
+```
+
+**Official documentation:** https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.nsmallest.html
+
+---
+
+## Missing Values and Duplicate Handling
+
+### `isna()`
+
+**What it does:** Detect missing values.
+
+**Example:**
+
+```python
+df.isna().sum()
+```
+
+**Official documentation:** https://pandas.pydata.org/docs/reference/api/pandas.Series.isna.html
+
+---
+
+### `isnull()`
+
+**What it does:** Alias for isna().
+
+**Example:**
+
+```python
+df.isnull()
+```
+
+**Official documentation:** https://pandas.pydata.org/docs/reference/api/pandas.Series.isnull.html
+
+---
+
+### `notna()`
+
+**What it does:** Detect non-missing values.
+
+**Example:**
+
+```python
+df[
+    df["age"].notna()
+]
+```
+
+**Official documentation:** https://pandas.pydata.org/docs/reference/api/pandas.Series.notna.html
+
+---
+
+### `any()`
+
+**What it does:** Test whether any value is true.
+
+**Example:**
+
+```python
+df[
+    df.isna().any(axis=1)
+]
+```
+
+**Official documentation:** https://pandas.pydata.org/docs/reference/api/pandas.Series.any.html
+
+---
+
+### `all()`
+
+**What it does:** Test whether all values are true.
+
+**Example:**
+
+```python
+df[
+    df.isna().all(axis=1)
+]
+```
+
+**Official documentation:** https://pandas.pydata.org/docs/reference/api/pandas.Series.all.html
+
+---
+
+### `dropna()`
+
+**What it does:** Remove rows or columns containing missing values.
+
+**Important notes:** `subset=` limits which columns matter; `how=` controls any/all behavior; `thresh=` sets a minimum count of non-missing values.
+
+**Example:**
+
+```python
+df = df.dropna()
+```
+
+**Official documentation:** https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.dropna.html
+
+---
+
+### `fillna()`
+
+**What it does:** Fill missing values.
+
+**Example:**
+
+```python
+df["age"] = df["age"].fillna(
+    0
+)
+```
+
+**Official documentation:** https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.fillna.html
+
+---
+
+### `ffill()`
+
+**What it does:** Forward-fill missing values from prior observations.
+
+**Example:**
+
+```python
+df = df.ffill()
+```
+
+**Official documentation:** https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.ffill.html
+
+---
+
+### `bfill()`
+
+**What it does:** Backward-fill missing values from later observations.
+
+**Example:**
+
+```python
+df = df.bfill()
+```
+
+**Official documentation:** https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.bfill.html
+
+---
+
+### `interpolate()`
+
+**What it does:** Estimate missing values using interpolation.
+
+**Example:**
+
+```python
+df["value"] = (
+    df["value"]
+    .interpolate()
+)
+```
+
+**Official documentation:** https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.interpolate.html
+
+---
+
+### `replace()`
+
+**What it does:** Replace values using mappings, literals, lists, or regex patterns.
+
+**Example:**
+
+```python
+df.columns = (
+    df.columns
+    .str.strip()
+    .str.lower()
+    .str.replace(
+        " ",
+        "_",
+        regex=False
+    )
+)
+```
+
+**Official documentation:** https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.replace.html
+
+---
+
+### `duplicated()`
+
+**What it does:** Mark duplicate values or rows.
+
+**Example:**
+
+```python
+df.index.duplicated()
+```
+
+**Official documentation:** https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.duplicated.html
+
+---
+
+### `drop_duplicates()`
+
+**What it does:** Remove duplicate rows.
+
+**Example:**
+
+```python
+df = df.drop_duplicates()
+```
+
+**Official documentation:** https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.drop_duplicates.html
+
+---
+
+## String Methods
+
+### `Series.str.lower()`
+
+**What it does:** Convert strings to lowercase.
+
+**Example:**
+
+```python
+df.columns = (
+    df.columns
+    .str.strip()
+    .str.lower()
+    .str.replace(
+        " ",
+        "_",
+        regex=False
+    )
+)
+```
+
+**Official documentation:** https://pandas.pydata.org/docs/reference/api/pandas.Series.str.lower.html
+
+---
+
+### `Series.str.upper()`
+
+**What it does:** Convert strings to uppercase.
+
+**Example:**
+
+```python
+df["name"] = (
+    df["name"]
+    .str.upper()
+)
+```
+
+**Official documentation:** https://pandas.pydata.org/docs/reference/api/pandas.Series.str.upper.html
+
+---
+
+### `Series.str.title()`
+
+**What it does:** Convert strings to title case.
+
+**Example:**
+
+```python
+df["name"] = (
+    df["name"]
+    .str.title()
+)
+```
+
+**Official documentation:** https://pandas.pydata.org/docs/reference/api/pandas.Series.str.title.html
+
+---
+
+### `Series.str.strip()`
+
+**What it does:** Trim leading and trailing characters/whitespace.
+
+**Example:**
+
+```python
+df.columns = (
+    df.columns
+    .str.strip()
+    .str.lower()
+    .str.replace(
+        " ",
+        "_",
+        regex=False
+    )
+)
+```
+
+**Official documentation:** https://pandas.pydata.org/docs/reference/api/pandas.Series.str.strip.html
+
+---
+
+### `Series.str.lstrip()`
+
+**What it does:** Trim leading characters/whitespace.
+
+**Example:**
+
+```python
+df["name"].str.lstrip()
+df["name"].str.rstrip()
+```
+
+**Official documentation:** https://pandas.pydata.org/docs/reference/api/pandas.Series.str.lstrip.html
+
+---
+
+### `Series.str.rstrip()`
+
+**What it does:** Trim trailing characters/whitespace.
+
+**Example:**
+
+```python
+df["name"].str.lstrip()
+df["name"].str.rstrip()
+```
+
+**Official documentation:** https://pandas.pydata.org/docs/reference/api/pandas.Series.str.rstrip.html
+
+---
+
+### `Series.str.contains()`
+
+**What it does:** Test strings for substring or regex matches.
+
+**Example:**
+
+```python
+df[
+    df["name"].str.contains(
+        "alice",
+        case=False,
+        na=False
+    )
+]
+```
+
+**Official documentation:** https://pandas.pydata.org/docs/reference/api/pandas.Series.str.contains.html
+
+---
+
+### `Series.str.startswith()`
+
+**What it does:** Test whether strings begin with a prefix.
+
+**Example:**
+
+```python
+df["code"].str.startswith(
+    "ABC"
+)
+```
+
+**Official documentation:** https://pandas.pydata.org/docs/reference/api/pandas.Series.str.startswith.html
+
+---
+
+### `Series.str.endswith()`
+
+**What it does:** Test whether strings end with a suffix.
+
+**Example:**
+
+```python
+df["file"].str.endswith(
+    ".csv"
+)
+```
+
+**Official documentation:** https://pandas.pydata.org/docs/reference/api/pandas.Series.str.endswith.html
+
+---
+
+### `Series.str.split()`
+
+**What it does:** Split strings by a delimiter or regex.
+
+**Example:**
+
+```python
+df[
+    ["first_name", "last_name"]
+] = (
+    df["full_name"]
+    .str.split(
+        " ",
+        n=1,
+        expand=True
+    )
+)
+```
+
+**Official documentation:** https://pandas.pydata.org/docs/reference/api/pandas.Series.str.split.html
+
+---
+
+### `Series.str.extract()`
+
+**What it does:** Extract regex capture groups from strings.
+
+**Example:**
+
+```python
+df["domain"] = (
+    df["email"]
+    .str.extract(
+        r"@(.+)$",
+        expand=False
+    )
+)
+```
+
+**Official documentation:** https://pandas.pydata.org/docs/reference/api/pandas.Series.str.extract.html
+
+---
+
+### `Series.str.zfill()`
+
+**What it does:** Left-pad strings with zeros.
+
+**Example:**
+
+```python
+df["id"] = (
+    df["id"]
+    .str.zfill(8)
+)
+```
+
+**Official documentation:** https://pandas.pydata.org/docs/reference/api/pandas.Series.str.zfill.html
+
+---
+
+### `Series.str.len()`
+
+**What it does:** Return string lengths.
+
+**Example:**
+
+```python
+df["name_length"] = (
+    df["name"]
+    .str.len()
+)
+```
+
+**Official documentation:** https://pandas.pydata.org/docs/reference/api/pandas.Series.str.len.html
+
+---
+
+## Categorical Methods
+
+### `Series.cat.rename_categories()`
+
+**What it does:** Rename category labels.
+
+**Example:**
+
+```python
+df["status"] = (
+    df["status"]
+    .cat.rename_categories({
+        "A": "Active",
+        "I": "Inactive"
+    })
+)
+```
+
+**Official documentation:** https://pandas.pydata.org/docs/reference/api/pandas.Series.cat.rename_categories.html
+
+---
+
+### `Series.cat.add_categories()`
+
+**What it does:** Add allowed labels to a categorical dtype.
+
+**Example:**
+
+```python
+df["status"] = (
+    df["status"]
+    .cat.add_categories(
+        ["Unknown"]
+    )
+)
+```
+
+**Official documentation:** https://pandas.pydata.org/docs/reference/api/pandas.Series.cat.add_categories.html
+
+---
+
+## Datetime, Timezone, Duration, Offset, and Period Methods
+
+### `Series.dt.strftime()`
+
+**What it does:** Format datetime values as strings.
+
+**Example:**
+
+```python
+df["date_text"] = (
+    df["timestamp"]
+    .dt.strftime(
+        "%Y-%m-%d"
+    )
+)
+```
+
+**Official documentation:** https://pandas.pydata.org/docs/reference/api/pandas.Series.dt.strftime.html
+
+---
+
+### `Series.dt.day_name()`
+
+**What it does:** Return weekday names.
+
+**Example:**
+
+```python
+df["day_name"] = (
+    df["timestamp"].dt.day_name()
+)
+```
+
+**Official documentation:** https://pandas.pydata.org/docs/reference/api/pandas.Series.dt.day_name.html
+
+---
+
+### `Series.dt.month_name()`
+
+**What it does:** Return month names.
+
+**Example:**
+
+```python
+df["month_name"] = (
+    df["timestamp"].dt.month_name()
+)
+```
+
+**Official documentation:** https://pandas.pydata.org/docs/reference/api/pandas.Series.dt.month_name.html
+
+---
+
+### `Series.dt.isocalendar()`
+
+**What it does:** Return ISO year, week, and weekday components.
+
+**Example:**
+
+```python
+iso = (
+    df["timestamp"]
+    .dt.isocalendar()
+)
+```
+
+**Official documentation:** https://pandas.pydata.org/docs/reference/api/pandas.Series.dt.isocalendar.html
+
+---
+
+### `Series.dt.normalize()`
+
+**What it does:** Set datetime time components to midnight.
+
+**Example:**
+
+```python
+df["date_floor"] = (
+    df["timestamp"]
+    .dt.normalize()
+)
+```
+
+**Official documentation:** https://pandas.pydata.org/docs/reference/api/pandas.Series.dt.normalize.html
+
+---
+
+### `Series.dt.floor()`
+
+**What it does:** Round datetime/timedelta values down to a frequency.
+
+**Example:**
+
+```python
+df["day"] = (
+    df["timestamp"]
+    .dt.floor("D")
+)
+```
+
+**Official documentation:** https://pandas.pydata.org/docs/reference/api/pandas.Series.dt.floor.html
+
+---
+
+### `Series.dt.tz_localize()`
+
+**What it does:** Attach/remove timezone metadata without converting the represented local clock time.
+
+**Important notes:** Use on naive datetimes. `ambiguous=` handles repeated fall-back times and `nonexistent=` handles skipped spring-forward times.
+
+**Example:**
+
+```python
+df["timestamp"] = (
+    df["timestamp"]
+    .dt.tz_localize(
+        "America/Chicago"
+    )
+)
+```
+
+**Official documentation:** https://pandas.pydata.org/docs/reference/api/pandas.Series.dt.tz_localize.html
+
+---
+
+### `Series.dt.tz_convert()`
+
+**What it does:** Convert aware datetimes between timezones while preserving the instant.
+
+**Important notes:** Use only on timezone-aware values. Converting to UTC preserves the instant and changes the displayed wall-clock time.
+
+**Example:**
+
+```python
+df["timestamp"] = (
+    df["timestamp"]
+    .dt.tz_convert(
+        "UTC"
+    )
+)
+```
+
+**Official documentation:** https://pandas.pydata.org/docs/reference/api/pandas.Series.dt.tz_convert.html
+
+---
+
+### `pd.Timestamp.now()`
+
+**What it does:** Create a Timestamp for the current time.
+
+**Example:**
+
+```python
+now_utc = pd.Timestamp.now(
+    tz="UTC"
+)
+```
+
+**Official documentation:** https://pandas.pydata.org/docs/reference/api/pandas.Timestamp.now.html
+
+---
+
+### `Series.dt.total_seconds()`
+
+**What it does:** Convert Timedelta values to total elapsed seconds.
+
+**Example:**
+
+```python
+df["seconds"] = (
+    df["duration"]
+    .dt.total_seconds()
+)
+```
+
+**Official documentation:** https://pandas.pydata.org/docs/reference/api/pandas.Series.dt.total_seconds.html
+
+---
+
+### `pandas.tseries.offsets.MonthEnd()`
+
+**What it does:** Calendar offset for month-end boundaries.
+
+**Example:**
+
+```python
+ts + offsets.MonthEnd(0)
+```
+
+**Official documentation:** https://pandas.pydata.org/docs/reference/api/pandas.tseries.offsets.MonthEnd.html
+
+---
+
+### `pandas.tseries.offsets.BDay()`
+
+**What it does:** Calendar offset for business days.
+
+**Example:**
+
+```python
+ts + offsets.BDay(1)
+```
+
+**Official documentation:** https://pandas.pydata.org/docs/reference/api/pandas.tseries.offsets.BusinessDay.html
+
+---
+
+### `pandas.tseries.offsets.BusinessMonthEnd()`
+
+**What it does:** Calendar offset for business month-end.
+
+**Example:**
+
+```python
+ts + offsets.BusinessMonthEnd(0)
+```
+
+**Official documentation:** https://pandas.pydata.org/docs/reference/api/pandas.tseries.offsets.BusinessMonthEnd.html
+
+---
+
+### `pandas.tseries.offsets.CustomBusinessDay()`
+
+**What it does:** Business-day offset with custom holidays/weekmask.
+
+**Example:**
+
+```python
+custom_bday = offsets.CustomBusinessDay(
+    weekmask="Mon Tue Wed Thu Fri",
+    holidays=[
+        "2026-01-01",
+        "2026-12-25"
+    ]
+)
+
+next_day = ts + custom_bday
+```
+
+**Official documentation:** https://pandas.pydata.org/docs/reference/api/pandas.tseries.offsets.CustomBusinessDay.html
+
+---
+
+### `pandas.tseries.offsets.Week()`
+
+**What it does:** Calendar offset for weekly boundaries.
+
+**Example:**
+
+```python
+ts + offsets.Week(
+    weekday=0
+)
+```
+
+**Official documentation:** https://pandas.pydata.org/docs/reference/api/pandas.tseries.offsets.Week.html
+
+---
+
+### `Series.dt.to_period()`
+
+**What it does:** Convert datetimes to calendar Period values.
+
+**Example:**
+
+```python
+df["month"] = (
+    df["timestamp"]
+    .dt.to_period("M")
+)
+```
+
+**Official documentation:** https://pandas.pydata.org/docs/reference/api/pandas.Series.dt.to_period.html
+
+---
+
+### `to_timestamp()`
+
+**What it does:** Convert Period values to timestamps.
+
+**Example:**
+
+```python
+periods.to_timestamp()
+```
+
+**Official documentation:** https://pandas.pydata.org/docs/reference/api/pandas.PeriodIndex.to_timestamp.html
+
+---
+
+### `between_time()`
+
+**What it does:** Select DatetimeIndex rows within a time-of-day interval.
+
+**Example:**
+
+```python
+df = df.set_index(
+    "timestamp"
+)
+
+business_hours = (
+    df.between_time(
+        "09:00",
+        "17:00"
+    )
+)
+```
+
+**Official documentation:** https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.between_time.html
+
+---
+
+### `at_time()`
+
+**What it does:** Select DatetimeIndex rows matching a time of day.
+
+**Example:**
+
+```python
+rows_at_noon = (
+    df.at_time(
+        "12:00"
+    )
+)
+```
+
+**Official documentation:** https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.at_time.html
+
+---
+
+### `resample()`
+
+**What it does:** Group time-series data into new frequency bins.
+
+**Important notes:** A DatetimeIndex/PeriodIndex/TimedeltaIndex or `on=` datetime column is required. Carefully choose `label=` and `closed=` at bin boundaries.
+
+**Example:**
+
+```python
+daily = (
+    df["sales"]
+    .resample("D")
+    .sum()
+)
+```
+
+**Official documentation:** https://pandas.pydata.org/docs/reference/api/pandas.Series.resample.html
+
+---
+
+### `asfreq()`
+
+**What it does:** Conform time-series data to a new frequency without aggregation.
+
+**Example:**
+
+```python
+hourly = (
+    daily
+    .resample("h")
+    .asfreq()
+)
+```
+
+**Official documentation:** https://pandas.pydata.org/docs/reference/api/pandas.Series.asfreq.html
+
+---
+
+## Grouping, Aggregation, and Windows
+
+### `groupby()`
+
+**What it does:** Split data into groups for aggregation, transformation, or filtering.
+
+**Important notes:** `as_index=False` is often convenient when you want grouping keys returned as normal columns.
+
+**Example:**
+
+```python
+df.groupby(
+    "city"
+)["age"].mean()
+```
+
+**Official documentation:** https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.groupby.html
+
+---
+
+### `agg()`
+
+**What it does:** Apply one or more aggregation functions.
+
+**Example:**
+
+```python
+daily = (
+    df
+    .resample("D")
+    .agg({
+        "sales": "sum",
+        "temperature": "mean"
+    })
+)
+```
+
+**Official documentation:** https://pandas.pydata.org/docs/reference/api/pandas.core.groupby.DataFrameGroupBy.agg.html
+
+---
+
+### `size()`
+
+**What it does:** Count group rows/elements.
+
+**Example:**
+
+```python
+df.groupby(
+    "city"
+).size()
+```
+
+**Official documentation:** https://pandas.pydata.org/docs/reference/api/pandas.core.groupby.DataFrameGroupBy.size.html
+
+---
+
+### `count()`
+
+**What it does:** Count non-missing observations.
+
+**Example:**
+
+```python
+df.groupby(
+    "city"
+)["age"].count()
+```
+
+**Official documentation:** https://pandas.pydata.org/docs/reference/api/pandas.Series.count.html
+
+---
+
+### `sum()`
+
+**What it does:** Compute sums.
+
+**Example:**
+
+```python
+df.memory_usage(
+    deep=True
+).sum()
+```
+
+**Official documentation:** https://pandas.pydata.org/docs/reference/api/pandas.Series.sum.html
+
+---
+
+### `mean()`
+
+**What it does:** Compute arithmetic mean.
+
+**Example:**
+
+```python
+df.isna().mean() * 100
+```
+
+**Official documentation:** https://pandas.pydata.org/docs/reference/api/pandas.Series.mean.html
+
+---
+
+### `median()`
+
+**What it does:** Compute median.
+
+**Example:**
+
+```python
+df["age"] = df["age"].fillna(
+    df["age"].median()
+)
+```
+
+**Official documentation:** https://pandas.pydata.org/docs/reference/api/pandas.Series.median.html
+
+---
+
+### `transform()`
+
+**What it does:** Return group calculations aligned to original rows.
+
+**Example:**
+
+```python
+df["city_avg_age"] = (
+    df
+    .groupby("city")
+    ["age"]
+    .transform("mean")
+)
+```
+
+**Official documentation:** https://pandas.pydata.org/docs/reference/api/pandas.core.groupby.SeriesGroupBy.transform.html
+
+---
+
+### `rank()`
+
+**What it does:** Assign ranks to values.
+
+**Example:**
+
+```python
+df["rank"] = (
+    df
+    .groupby("city")
+    ["sales"]
+    .rank(
+        ascending=False
+    )
+)
+```
+
+**Official documentation:** https://pandas.pydata.org/docs/reference/api/pandas.Series.rank.html
+
+---
+
+### `rolling()`
+
+**What it does:** Create moving-window calculations over rows or elapsed time.
+
+**Important notes:** A numeric window means rows; an offset such as `'24h'` means elapsed time. Use `min_periods=` to control early results.
+
+**Example:**
+
+```python
+df["rolling_mean"] = (
+    df["value"]
+    .rolling(
+        window=7
+    )
+    .mean()
+)
+```
+
+**Official documentation:** https://pandas.pydata.org/docs/reference/api/pandas.Series.rolling.html
+
+---
+
+### `expanding()`
+
+**What it does:** Create cumulative windows beginning at the first observation.
+
+**Example:**
+
+```python
+df["running_mean"] = (
+    df["value"]
+    .expanding()
+    .mean()
+)
+```
+
+**Official documentation:** https://pandas.pydata.org/docs/reference/api/pandas.Series.expanding.html
+
+---
+
+### `ewm()`
+
+**What it does:** Create exponentially weighted window calculations.
+
+**Example:**
+
+```python
+df["ewm"] = (
+    df["value"]
+    .ewm(
+        span=10,
+        adjust=False
+    )
+    .mean()
+)
+```
+
+**Official documentation:** https://pandas.pydata.org/docs/reference/api/pandas.Series.ewm.html
+
+---
+
+### `shift()`
+
+**What it does:** Move values forward/backward by periods.
+
+**Example:**
+
+```python
+df["previous_sales"] = (
+    df["sales"].shift(1)
+)
+```
+
+**Official documentation:** https://pandas.pydata.org/docs/reference/api/pandas.Series.shift.html
+
+---
+
+### `diff()`
+
+**What it does:** Compute differences from prior/later periods.
+
+**Example:**
+
+```python
+df["sales_change"] = (
+    df["sales"].diff()
+)
+```
+
+**Official documentation:** https://pandas.pydata.org/docs/reference/api/pandas.Series.diff.html
+
+---
+
+### `pct_change()`
+
+**What it does:** Compute fractional change between periods.
+
+**Example:**
+
+```python
+df["pct_change"] = (
+    df["sales"]
+    .pct_change()
+)
+```
+
+**Official documentation:** https://pandas.pydata.org/docs/reference/api/pandas.Series.pct_change.html
+
+---
+
+### `cumsum()`
+
+**What it does:** Compute cumulative sums.
+
+**Example:**
+
+```python
+df["running_total"] = (
+    df["sales"]
+    .cumsum()
+)
+```
+
+**Official documentation:** https://pandas.pydata.org/docs/reference/api/pandas.Series.cumsum.html
+
+---
+
+### `cummax()`
+
+**What it does:** Compute cumulative maxima.
+
+**Example:**
+
+```python
+df["running_max"] = (
+    df["sales"]
+    .cummax()
+)
+```
+
+**Official documentation:** https://pandas.pydata.org/docs/reference/api/pandas.Series.cummax.html
+
+---
+
+## Reshaping and Transformation
+
+### `melt()`
+
+**What it does:** Unpivot wide data into long form.
+
+**Example:**
+
+```python
+long = df.melt(
+    id_vars="id",
+    var_name="month",
+    value_name="sales"
+)
+```
+
+**Official documentation:** https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.melt.html
+
+---
+
+### `pivot()`
+
+**What it does:** Reshape unique key combinations from long to wide form.
+
+**Example:**
+
+```python
+wide = df.pivot(
+    index="id",
+    columns="month",
+    values="sales"
+)
+```
+
+**Official documentation:** https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.pivot.html
+
+---
+
+### `stack()`
+
+**What it does:** Move column levels into the row index.
+
+**Example:**
+
+```python
+stacked = df.stack()
+```
+
+**Official documentation:** https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.stack.html
+
+---
+
+### `unstack()`
+
+**What it does:** Move index levels into columns.
+
+**Example:**
+
+```python
+wide = stacked.unstack()
+```
+
+**Official documentation:** https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.unstack.html
+
+---
+
+### `explode()`
+
+**What it does:** Expand list-like cells into multiple rows.
+
+**Example:**
+
+```python
+df = pd.DataFrame({
+    "id": [1, 2],
+    "tags": [
+        ["python", "pandas"],
+        ["sql"]
+    ]
+})
+
+exploded = df.explode(
+    "tags"
+)
+```
+
+**Official documentation:** https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.explode.html
+
+---
+
+### `map()`
+
+**What it does:** Map Series values through a mapping or function.
+
+**Example:**
+
+```python
+mapping = {
+    "M": "Male",
+    "F": "Female"
+}
+
+df["gender_label"] = (
+    df["gender"].map(
+        mapping
+    )
+)
+```
+
+**Official documentation:** https://pandas.pydata.org/docs/reference/api/pandas.Series.map.html
+
+---
+
+### `apply()`
+
+**What it does:** Apply a callable to Series values or DataFrame rows/columns.
+
+**Important notes:** Prefer vectorized arithmetic and `.str`, `.dt`, or `.cat` operations when available; row-wise `axis=1` apply is commonly slower.
+
+**Example:**
+
+```python
+df["age_group"] = (
+    df["age"]
+    .apply(
+        lambda x:
+        "adult"
+        if x >= 18
+        else "minor"
+    )
+)
+```
+
+**Official documentation:** https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.apply.html
+
+---
+
+### `mul()`
+
+**What it does:** Perform aligned element-wise multiplication.
+
+**Example:**
+
+```python
+percent = (
+    df["category"]
+    .value_counts(
+        normalize=True
+    )
+    .mul(100)
+)
+```
+
+**Official documentation:** https://pandas.pydata.org/docs/reference/api/pandas.Series.mul.html
+
+---
+
+### `to_frame()`
+
+**What it does:** Convert a Series into a one-column DataFrame.
+
+**Example:**
+
+```python
+summary = (
+    df
+    .groupby("category")
+    ["sales"]
+    .sum()
+    .sort_values(
+        ascending=False
+    )
+    .to_frame()
+)
+
+summary["share"] = (
+    summary["sales"]
+    / summary["sales"].sum()
+)
+
+# ...
+```
+
+**Official documentation:** https://pandas.pydata.org/docs/reference/api/pandas.Series.to_frame.html
+
+---
+
+### `eval()`
+
+**What it does:** Evaluate an expression against DataFrame columns.
+
+**Example:**
+
+```python
+df.query(...)
+df.eval(...)
+```
+
+**Official documentation:** https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.eval.html
+
+---
+
+## Output, Copying, and Iteration
+
+### `to_csv()`
+
+**What it does:** Write data to CSV/delimited text.
+
+**Important notes:** `index=False` is common for interchange. CSV does not preserve rich Pandas dtype metadata the way Parquet can.
+
+**Example:**
+
+```python
+df.to_csv(
+    "output.csv",
+    index=False
+)
+```
+
+**Official documentation:** https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.to_csv.html
+
+---
+
+### `to_excel()`
+
+**What it does:** Write data to Excel.
+
+**Example:**
+
+```python
+df.to_excel(
+    "output.xlsx",
+    index=False
+)
+```
+
+**Official documentation:** https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.to_excel.html
+
+---
+
+### `to_json()`
+
+**What it does:** Serialize data to JSON.
+
+**Example:**
+
+```python
+df.to_json(
+    "output.json",
+    orient="records",
+    date_format="iso"
+)
+```
+
+**Official documentation:** https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.to_json.html
+
+---
+
+### `to_parquet()`
+
+**What it does:** Write typed columnar Parquet data.
+
+**Example:**
+
+```python
+df.to_parquet(
+    "output.parquet",
+    index=False
+)
+```
+
+**Official documentation:** https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.to_parquet.html
+
+---
+
+### `to_pickle()`
+
+**What it does:** Serialize a Pandas object with Python pickle.
+
+**Example:**
+
+```python
+df.to_pickle(
+    "output.pkl"
+)
+```
+
+**Official documentation:** https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.to_pickle.html
+
+---
+
+### `to_sql()`
+
+**What it does:** Write DataFrame rows to a SQL table.
+
+**Example:**
+
+```python
+df.to_sql(
+    "table_name",
+    connection,
+    if_exists="append",
+    index=False
+)
+```
+
+**Official documentation:** https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.to_sql.html
+
+---
+
+### `to_clipboard()`
+
+**What it does:** Copy tabular data to the clipboard.
+
+**Example:**
+
+```python
+df.to_clipboard(
+    index=False
+)
+```
+
+**Official documentation:** https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.to_clipboard.html
+
+---
+
+### `copy()`
+
+**What it does:** Create an explicit copy of a Pandas object.
+
+**Example:**
+
+```python
+subset = (
+    df.loc[
+        df["age"] > 30
+    ]
+    .copy()
+)
+```
+
+**Official documentation:** https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.copy.html
+
+---
+
+### `iterrows()`
+
+**What it does:** Iterate through DataFrame rows as (index, Series) pairs.
+
+**Example:**
+
+```python
+for i, row in df.iterrows():
+    df.loc[i, "total"] = (
+        row["price"]
+        * row["quantity"]
+    )
+```
+
+**Official documentation:** https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.iterrows.html
+
+---
+
+## Additional Methods Used in the Guide
+
+### `tolist()`
+
+**What it does:** Perform the `tolist` operation on the relevant Pandas object.
+
+**Example:**
+
+```python
+df.columns.tolist()
+```
+
+**Official documentation:** https://pandas.pydata.org/docs/reference/
+
+---
+
+### `where()`
+
+**What it does:** Perform the `where` operation on the relevant Pandas object.
+
+**Example:**
+
+```python
+df["age_group"] = np.where(
+    df["age"] >= 18,
+    "adult",
+    "minor"
+)
+```
+
+**Official documentation:** https://pandas.pydata.org/docs/reference/
 
 ---
 
